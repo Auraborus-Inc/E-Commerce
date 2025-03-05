@@ -1,6 +1,6 @@
 const express = require('express');
 const port = 8000;
-const database = require('D:/Practise Projects/E Comerence Website/databseConnectivity.js');
+const database = require('./databseConnectivity.js');
 
 const app = express();
 
