@@ -20,5 +20,4 @@ app.listen(port, () => {
     console.log("Server Started at http://localhost:8000")
   })
 
-// database.client.end();
 module.exports = app;
