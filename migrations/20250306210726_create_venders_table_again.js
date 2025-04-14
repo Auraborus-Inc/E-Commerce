@@ -5,7 +5,7 @@
 
 exports.up = function(knex) {
     return knex.schema.createTable('venders', (table) => {
-        table.uuid('id').primary().defaultTo(knex.raw('uuid_generate_v4()'));
+        table.uuid('id').primary().defaultTo(knex.raw('gen_random_uuid()'));
         table.string('name').notNullable();
         table.string('email');
         table.string('phone_no').notNullable();
@@ -20,5 +20,5 @@ exports.up = function(knex) {
  * @returns { Promise<void> }
  */
 exports.down = function(knex) {
-    return knex.schema.dropTable('vendors')
+    return knex.schema.dropTable('venders')
 };
