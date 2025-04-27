@@ -22,6 +22,32 @@ app.post('/submit', (req, res) => {
       you are ${req.body.age} years old`)
   });
 
+  app.post('/register', async (req, res) =>{
+    const { name, emial, password} = req.body;
+    if(!name || !email || !password){
+        return res.status(400).send('Please fill all the fields')
+    }
+
+    try{
+        const existuser = await db('user')
+        .where({ email: email })
+        .orwhere({ phone_no: phone_no })
+        .first()
+        if(existuser){
+            return res.status(400).send('User already exists')
+        }
+
+        await db('user').insert({
+            name: name,
+            email: email,
+            password: password,
+        })
+    }catch(err){
+        console.error(err);
+        return res.status(500).send('Internal Server Error')
+    }
+  })
+
 app.listen(port, () => {
     console.log("Server Started at http://localhost:8000")
   })
