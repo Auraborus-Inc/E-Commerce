@@ -3,6 +3,8 @@ const port = 8000;
 const database = require('./databseConnectivity.js');
 
 const app = express();
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 app.get('/Home', async (req, res) => {
@@ -23,13 +25,14 @@ app.post('/submit', (req, res) => {
   });
 
   app.post('/register', async (req, res) =>{
-    const { name, emial, password} = req.body;
+    console.log(req.body)
+    const {name, email, password} = req.body;
     if(!name || !email || !password){
         return res.status(400).send('Please fill all the fields')
     }
 
     try{
-        const existuser = await db('user')
+        const existuser = await database('user')
         .where({ email: email })
         .orwhere({ phone_no: phone_no })
         .first()
@@ -37,7 +40,7 @@ app.post('/submit', (req, res) => {
             return res.status(400).send('User already exists')
         }
 
-        await db('user').insert({
+        await database('user').insert({
             name: name,
             email: email,
             password: password,
