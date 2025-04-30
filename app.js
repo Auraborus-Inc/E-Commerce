@@ -25,8 +25,7 @@ app.post('/submit', (req, res) => {
   });
 
   app.post('/register', async (req, res) =>{
-    console.log(req.body)
-    const {name, email, password} = req.body;
+    const {name, email, password, phone_no, address} = req.body;
     if(!name || !email || !password){
         return res.status(400).send('Please fill all the fields')
     }
@@ -34,7 +33,7 @@ app.post('/submit', (req, res) => {
     try{
         const existuser = await database('user')
         .where({ email: email })
-        .orwhere({ phone_no: phone_no })
+        .orWhere({ password: password })
         .first()
         if(existuser){
             return res.status(400).send('User already exists')
@@ -43,8 +42,9 @@ app.post('/submit', (req, res) => {
         await database('user').insert({
             name: name,
             email: email,
-            password: password,
+            password: password
         })
+        return res.status(200).send('User registered successfully')
     }catch(err){
         console.error(err);
         return res.status(500).send('Internal Server Error')
