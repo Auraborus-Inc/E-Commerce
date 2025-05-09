@@ -1,0 +1,62 @@
+/**
+ * @param { import("knex").Knex } knex
+ * @returns { Promise<void> } 
+ */
+exports.seed = async function(knex) {
+  const products = [
+  { name: 'Wireless Mouse', quantity: 50, price: 19.99 },
+  { name: 'Bluetooth Headphones', quantity: 30, price: 79.99 },
+  { name: 'Yoga Mat', quantity: 100, price: 25.50 },
+  { name: 'Smartphone Stand', quantity: 60, price: 15.99 },
+  { name: 'Laptop Sleeve', quantity: 40, price: 12.99 },
+  { name: 'Backpack', quantity: 70, price: 49.99 },
+  { name: 'Smart Watch', quantity: 20, price: 129.99 },
+  { name: 'Fitness Tracker', quantity: 80, price: 59.95 },
+  { name: 'Keyboard', quantity: 50, price: 39.99 },
+  { name: 'Portable Charger', quantity: 90, price: 24.99 },
+  { name: 'Electric Kettle', quantity: 40, price: 34.99 },
+  { name: 'Instant Pot', quantity: 20, price: 89.99 },
+  { name: 'Coffee Maker', quantity: 50, price: 49.99 },
+  { name: 'Air Fryer', quantity: 30, price: 99.99 },
+  { name: 'Juicer', quantity: 25, price: 79.99 },
+  { name: 'Blender', quantity: 60, price: 59.99 },
+  { name: 'Electric Toothbrush', quantity: 120, price: 39.99 },
+  { name: 'Hair Dryer', quantity: 80, price: 29.99 },
+  { name: 'Washing Machine', quantity: 15, price: 399.99 },
+  { name: 'Microwave Oven', quantity: 30, price: 120.00 },
+  { name: 'Electric Grill', quantity: 50, price: 75.50 },
+  { name: 'LED Desk Lamp', quantity: 90, price: 19.99 },
+  { name: 'T-Shirt', quantity: 100, price: 15.99 },
+  { name: 'Sweatshirt', quantity: 80, price: 34.99 },
+  { name: 'Jeans', quantity: 50, price: 49.99 },
+  { name: 'Sneakers', quantity: 30, price: 59.99 },
+  { name: 'Winter Jacket', quantity: 40, price: 89.99 },
+  { name: 'Handbag', quantity: 60, price: 55.00 },
+  { name: 'Wallet', quantity: 70, price: 25.99 },
+  { name: 'Sunglasses', quantity: 100, price: 19.99 },
+  { name: 'Leather Gloves', quantity: 50, price: 29.99 },
+  { name: 'Cap', quantity: 150, price: 14.99 },
+  { name: 'Scarf', quantity: 100, price: 18.00 },
+  { name: 'Sneaker Cleaner', quantity: 200, price: 9.99 },
+  { name: 'Hiking Boots', quantity: 30, price: 89.99 },
+  { name: 'Camping Tent', quantity: 40, price: 120.99 },
+  { name: 'Sleeping Bag', quantity: 70, price: 39.99 },
+  { name: 'Camping Stove', quantity: 50, price: 59.99 },
+  { name: 'Binoculars', quantity: 60, price: 49.99 },
+  { name: 'Fishing Rod', quantity: 25, price: 79.99 },
+  { name: 'Travel Backpack', quantity: 50, price: 89.95 },
+  { name: 'Camera', quantity: 30, price: 299.99 },
+  { name: 'Phone Case', quantity: 200, price: 15.00 },
+  { name: 'Laptop Charger', quantity: 100, price: 29.99 },
+  { name: 'Wireless Earbuds', quantity: 60, price: 79.99 },
+  { name: 'Smart Home Hub', quantity: 50, price: 99.99 },
+  { name: 'Smart Thermostat', quantity: 40, price: 129.99 },
+  { name: 'Security Camera', quantity: 30, price: 149.99 },
+  { name: 'Smart Light Bulbs', quantity: 100, price: 29.99 },
+  { name: 'Smart Door Lock', quantity: 40, price: 199.99 },
+  { name: 'Wi-Fi Extender', quantity: 80, price: 29.99 },
+  { name: 'Portable Speaker', quantity: 120, price: 39.99 }
+  ];
+
+  await knex('products').insert(products);
+};

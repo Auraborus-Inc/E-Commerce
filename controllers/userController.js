@@ -72,9 +72,14 @@ exports.loginUser = async (req, res) => {
     }
 };
 
-exports.dashboard = (req, res) => {
+exports.dashboard = async (req, res) => {
     if (req.session.user) {
-        return res.status(200).send('Welcome to the Dashboard');
+
+        const products = await database('products').select('*');
+        return res.status(200).json({
+            message: 'Welcome to the Dashboard',
+            products: products
+        });    
     }
     return res.status(401).send('First Login Please');
 };
