@@ -28,13 +28,11 @@ exports.registerUser = async (req, res) => {
     try {
         const existUser = await database('user')
             .where({ email: email })
-            .orWhere({ password: password })
             .first();
 
         if (existUser) {
             return res.status(400).send('User already exists');
         }
-
         await database('user').insert({
             name: name,
             email: email,
