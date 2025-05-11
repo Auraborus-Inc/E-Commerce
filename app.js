@@ -1,9 +1,11 @@
 const express = require('express');
 const session = require('express-session');
 const userRoutes = require('./routes/userRoutes');
-const port = 8000;``
+const port = 8000;
+const cors = require('cors');
 
 const app = express();
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
