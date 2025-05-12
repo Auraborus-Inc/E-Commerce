@@ -9,7 +9,6 @@ exports.homePage = (req, res) => {
     }
 };
 
-
 exports.getAllUsers = async (req, res) => {
     try {
         const users = await database('user').select('*');
