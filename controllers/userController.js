@@ -1,4 +1,5 @@
-const database = require('../databseConnectivity');
+const database = require('../databseConnectivity.js');
+const jwt = require('jsonwebtoken');
 
 exports.homePage = (req, res) => {
     try {
@@ -48,8 +49,10 @@ exports.registerUser = async (req, res) => {
     }
 };
 
+
 exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
+    
     if (!email || !password) {
         return res.status(400).send('Please fill all the fields');
     }
@@ -64,8 +67,20 @@ exports.loginUser = async (req, res) => {
             return res.status(400).send('Invalid credentials');
         }
 
-        req.session.user = { id: user.id, email: user.email };
-        return res.status(200).send('User logged in successfully');
+        const payload = {
+            id: user.id,
+            email: user.email,
+        };
+
+        const token = jwt.sign(payload, 
+                        process.env.JWT_SECRET, 
+                        { expiresIn: '15s' }
+        );
+
+        return res.status(200).json({
+            message: 'User logged in successfully',
+            token: token
+        });
     } catch (err) {
         console.error(err);
         return res.status(500).send('Internal Server Error');
@@ -73,16 +88,11 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.dashboard = async (req, res) => {
-    if (req.session.user) {
-
-        const products = await database('products').select('*');
+    const products = await database('products').select('*');
         return res.status(200).json({
-            message: 'Welcome to the Dashboard',
             products: products
-        });    
-    }
-    return res.status(401).send('First Login Please');
-};
+        });
+}
 
 exports.logoutUser = (req, res) => {
     if (req.session.user) {
@@ -97,3 +107,24 @@ exports.logoutUser = (req, res) => {
         return res.status(401).send('First Login Please');
     }
 };
+
+exports.authToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if(token == null) return res.status(401).send("No Tken Avaialable");
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) =>{
+        if(err) return res.status(403).send("Invalid Token");
+        req.user  = user
+        next()
+    })
+}
+
+
+
+exports.logedBody = (req, res, next) => {
+    console.log(req.body)
+    next()
+}
+
