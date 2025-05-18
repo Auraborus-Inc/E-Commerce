@@ -1,5 +1,6 @@
 const database = require('../databseConnectivity');
 const jwt = require('jsonwebtoken');
+let refreshTokens = []
 
 exports.homePage = (req, res) => {
     try {
@@ -67,19 +68,13 @@ exports.loginUser = async (req, res) => {
             return res.status(400).send('Invalid credentials');
         }
 
-        const payload = {
-            id: user.id,
-            email: user.email,
-        };
-
-        const token = jwt.sign(payload, 
-                        process.env.JWT_SECRET, 
-                        { expiresIn: '15s' }
-        );
-
+        const token = exports.generateAccessToken(user)
+        const refreshToken = jwt.sign(user, process.env.JWT_REFRESH_SECRET)
+        refreshTokens.push(refreshToken);
         return res.status(200).json({
             message: 'User logged in successfully',
-            token: token
+            token: token,
+            refreshToken: refreshToken
         });
     } catch (err) {
         console.error(err);
@@ -108,6 +103,23 @@ exports.logoutUser = (req, res) => {
     }
 };
 
+exports.refreshToken = (req, res) => {
+    const refreshToken = req.body.token
+    if(refreshToken == null)
+        return res.status(401).send("Refresh Token is Null")
+    if (!refreshTokens.includes(refreshToken)) {
+        return res.status(403).send("Refresh Token not Available");
+    }
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
+        if(err)
+            return res.status(403)
+        const accessToken = exports.generateAccessToken(user)
+        res.json({
+            accessToken: accessToken
+        })
+    })
+}
+
 exports.authToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
@@ -119,4 +131,17 @@ exports.authToken = (req, res, next) => {
         req.user  = user
         next()
     })
+}
+
+exports.generateAccessToken = (user) => {
+    const payload = {
+        id: user.id,
+        email: user.email,
+    };
+
+    return jwt.sign(
+        payload, 
+        process.env.JWT_SECRET,
+        {expiresIn: "15s"}
+    );
 }
