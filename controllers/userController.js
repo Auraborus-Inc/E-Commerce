@@ -71,11 +71,19 @@ exports.loginUser = async (req, res) => {
         const token = exports.generateAccessToken(user)
         const refreshToken = jwt.sign(user, process.env.JWT_REFRESH_SECRET)
         refreshTokens.push(refreshToken);
-        return res.status(200).json({
+       return res.status(200).json({
             message: 'User logged in successfully',
             token: token,
-            refreshToken: refreshToken
+            refreshToken: refreshToken,
+            user: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                phone_no: user.phone_no,
+                address: user.address
+            }
         });
+
     } catch (err) {
         console.error(err);
         return res.status(500).send('Internal Server Error');
