@@ -71,3 +71,9 @@ exports.generateAccessToken = (user) => {
         {expiresIn: "15s"}
     );
 }
+
+module.exports = {
+    refreshTokens,
+    authToken,
+    generateAccessToken
+};
