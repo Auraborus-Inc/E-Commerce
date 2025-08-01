@@ -98,35 +98,55 @@ exports.dashboard = async (req, res) => {
 }
 
 exports.logoutUser = (req, res) => {
-    if (req.session.user) {
-        req.session.destroy((err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).send('Internal Server Error');
-            }
-            return res.status(200).send('User logged out successfully');
-        });
-    } else {
-        return res.status(401).send('First Login Please');
+    try{
+        return res.status(200).send('User logged out successfully');
+    } catch (err) {
+        console.log(err)
     }
 };
 
-exports.refreshToken = (req, res) => {
-    const refreshToken = req.body.token
-    if(refreshToken == null)
-        return res.status(401).send("Refresh Token is Null")
+exports.refreshToken = async (req, res) => {
+    const refreshToken = req.body.token;
+
+    if (!refreshToken)
+        return res.status(401).send("Refresh Token is Null");
+
     if (!refreshTokens.includes(refreshToken)) {
         return res.status(403).send("Refresh Token not Available");
     }
-    jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => {
-        if(err)
-            return res.status(403)
-        const accessToken = exports.generateAccessToken(user)
-        res.json({
-            accessToken: accessToken
-        })
-    })
-}
+
+    try {
+        const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+        const userFromDb = await database('user')
+            .where({ id: decoded.id })
+            .first();
+
+        if (!userFromDb) {
+            return res.status(404).send("User not found");
+        }
+
+        const accessToken = exports.generateAccessToken(userFromDb);
+
+        return res.json({
+            token: accessToken,
+            refreshToken: refreshToken,
+            user: {
+                id: userFromDb.id,
+                name: userFromDb.name,
+                email: userFromDb.email,
+                phone_no: userFromDb.phone_no,
+                address: userFromDb.address
+            }
+        });
+
+    } catch (err) {
+        console.error(err);
+        return res.status(403).send("Invalid Refresh Token");
+    }
+};
+
+
 
 exports.authToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
