@@ -1,12 +1,17 @@
 const express = require('express');
 const session = require('express-session');
-const userRoutes = require('./routes/userRoutes');
+
 const port = 8000;
+const app = express();
 const cors = require('cors');
 
-const app = express();
-app.use(cors());
+// Impoting Routes
+const userRoutes = require('./routes/userRoutes');
+const categoryRoutes = require('./routes/catagoryRoutes');
+const tokenRoutes = require('./routes/tokenRoutes');
 
+
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -17,7 +22,9 @@ app.use(session({
     cookie: { maxAge: 1000 * 60 * 60 }
 }));
 
-app.use('/', userRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/tokens', tokenRoutes);
 
 app.listen(port, () => {
     console.log(`Server Started at http://localhost:${port}`);

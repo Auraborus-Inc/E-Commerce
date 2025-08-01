@@ -1,6 +1,7 @@
+const { generateAccessToken } = require('./tokenController');
 const database = require('../databseConnectivity');
 const jwt = require('jsonwebtoken');
-let refreshTokens = []
+const { refreshTokens } = require('./tokenStore');
 
 exports.homePage = (req, res) => {
     try {
@@ -68,7 +69,7 @@ exports.loginUser = async (req, res) => {
             return res.status(400).send('Invalid credentials');
         }
 
-        const token = exports.generateAccessToken(user)
+        const token = generateAccessToken(user)
         const refreshToken = jwt.sign(user, process.env.JWT_REFRESH_SECRET)
         refreshTokens.push(refreshToken);
        return res.status(200).json({
