@@ -92,7 +92,7 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.dashboard = async (req, res) => {
-    const products = await database('products').select('*');
+    const products = await database('productsIndustryStands').select('*');
         return res.status(200).json({
             products: products
         });

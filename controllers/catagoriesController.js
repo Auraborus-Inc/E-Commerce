@@ -1,15 +1,17 @@
 const database = require('../databseConnectivity');
 
 exports.createCategory = async (req, res) => {
-    const { name, description } = req.body;
-    if (!name || !description) {
+    const { name, description, isActive } = req.body;
+    console.log("Creating category:", name, description, isActive);
+    if (!name || !description || !isActive) {
         return res.status(400).send('Please fill all the fields');
     }
 
     try {
-        await database('categories').insert({
+        await database('catagories').insert({
             name: name,
-            description: description
+            description: description,
+            is_active: isActive === 'active' ? true : false
         });
         return res.status(201).send('Category created successfully');
     } catch (err) {
@@ -20,7 +22,7 @@ exports.createCategory = async (req, res) => {
 
 exports.getAllCategories = async (req, res) => {
     try {
-        const categories = await database('categories').select('*');
+        const categories = await database('catagories').select('*');
         return res.status(200).json(categories);
     } catch (err) {
         console.error(err);
@@ -31,11 +33,11 @@ exports.getAllCategories = async (req, res) => {
 exports.getCategoryByName = async (req, res) => {
     const { name } = req.params;
     try {
-        const category = await database('categories')
+        const category = await database('catagories')
             .where({ name: name })
             .first();
 
-        if (category === 0) {
+        if (!category) {
             return res.status(404).send('Category not found');
         }
         return res.status(200).json(category);
@@ -47,18 +49,19 @@ exports.getCategoryByName = async (req, res) => {
 
 exports.updateCategoryByName = async (req, res) => {
     const { name } = req.params;
-    const { description, isActive } = req.body;
+    const { description, is_active } = req.body;
+    console.log("Updating category:", name, description, is_active);
 
-    if (description === undefined && isActive === undefined) {
+    if (description === undefined && is_active === undefined) {
         return res.status(400).send('Please provide at least one field to update (description or isActive).');
     }
 
     try {
         const updateFields = {};
         if (description !== undefined) updateFields.description = description;
-        if (isActive !== undefined) updateFields.isActive = isActive;
+        if (is_active !== undefined) updateFields.is_active = is_active;
 
-        const updatedCategory = await database('categories')
+        const updatedCategory = await database('catagories')
             .where({ name: name })
             .update(updateFields);
 
@@ -76,7 +79,7 @@ exports.deleteCategoryByName = async (req, res) => {
     const { name } = req.params;
 
     try {
-        const deletedCategory = await database('categories')
+        const deletedCategory = await database('catagories')
             .where({ name: name })
             .del();
 

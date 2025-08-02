@@ -135,18 +135,3 @@ exports.deleteProductByName = async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 };
-module.exports = {
-  addProduct,
-  getAllProducts,
-
-  getProductById,
-  getProductByName,
-  getProductByCategory,
-  
-  updateProductById,
-  updateProductByName,
-
-  deleteProductById,
-  deleteProductByName
-};
-
