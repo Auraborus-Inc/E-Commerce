@@ -1,14 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const userController = require('../controllers/userControllers');
 
-const userController = require('../controllers/userController');
+router.get('/getAllUsers', userController.getAllUsers);
+router.post('/createUser', userController.createUser);
+router.get('/getUserByEmail/:email', userController.getUserByEmail);
+router.put('/updateUserByEmail/:email', userController.updateUserByEmail);
+router.delete('/deleteUserByEmail/:email', userController.deleteUserByEmail);
 
-// Define routes for user operations
-router.get('/Home', userController.homePage);
-router.get('/all_users', userController.getAllUsers);
-router.post('/register', userController.registerUser);
-router.post('/login',  userController.loginUser);
-router.get('/dashboard', userController.dashboard);
-router.get('/logout', userController.logoutUser);
-
-module.exports = router
+module.exports = router;

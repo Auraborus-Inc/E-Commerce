@@ -6,10 +6,11 @@ const app = express();
 const cors = require('cors');
 
 // Impoting Routes
-const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/authRoutes');
 const categoryRoutes = require('./routes/catagoryRoutes');
 const tokenRoutes = require('./routes/tokenRoutes');
 const productsRoutes = require('./routes/productsRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 
 app.use(cors());
@@ -23,10 +24,11 @@ app.use(session({
     cookie: { maxAge: 1000 * 60 * 60 }
 }));
 
-app.use('/api/users', userRoutes);
+app.use('/api', authRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/tokens', tokenRoutes);
 app.use('/api/products', productsRoutes);
+app.use('/api/users', userRoutes);
 
 app.listen(port, () => {
     console.log(`Server Started at http://localhost:${port}`);
