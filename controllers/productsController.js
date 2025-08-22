@@ -9,8 +9,8 @@ exports.addProduct = async (req, res) => {
       return res.status(400).json({ message: 'Required fields missing' });
     }
 
-    const [id] = await database('products').insert({ name, category, description, price, quantity });
-    const newProduct = await database('products').where({ id }).first();
+    const [id] = await database('productsIndustryStands').insert({ name, category, description, price, quantity });
+    const newProduct = await database('productsIndustryStands').where({ id }).first();
 
     res.status(201).json(newProduct);
   } catch (error) {
@@ -22,7 +22,7 @@ exports.addProduct = async (req, res) => {
 // GET /getAllProducts
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await database('products').select('*');
+    const products = await database('productsIndustryStands').select('*');
     res.status(200).json(products);
   } catch (error) {
     console.error(error);
@@ -34,7 +34,7 @@ exports.getAllProducts = async (req, res) => {
 exports.getProductById = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = await database('products').where({ id }).first();
+    const product = await database('productsIndustryStands').where({ id }).first();
 
     if (!product) return res.status(404).send('Product not found');
     res.status(200).json(product);
@@ -48,7 +48,7 @@ exports.getProductById = async (req, res) => {
 exports.getProductByName = async (req, res) => {
   try {
     const { name } = req.params;
-    const product = await database('products').whereILike('name', `%${name}%`);
+    const product = await database('productsIndustryStands').whereILike('name', `%${name}%`);
 
     if (!product.length) return res.status(404).send('No product found with given name');
     res.status(200).json(product);
@@ -62,7 +62,7 @@ exports.getProductByName = async (req, res) => {
 exports.getProductByCategory = async (req, res) => {
   try {
     const { category } = req.params;
-    const products = await database('products').whereILike('category', `%${category}%`);
+    const products = await database('productsIndustryStands').whereILike('category', `%${category}%`);
 
     if (!products.length) return res.status(404).send('No products found in this category');
     res.status(200).json(products);
@@ -78,10 +78,10 @@ exports.updateProductById = async (req, res) => {
     const { id } = req.params;
     const { name, category, description, price, quantity } = req.body;
 
-    const updated = await database('products').where({ id }).update({ name, category, description, price, quantity });
+    const updated = await database('productsIndustryStands').where({ id }).update({ name, category, description, price, quantity });
 
     if (!updated) return res.status(404).send('Product not found');
-    const product = await database('products').where({ id }).first();
+    const product = await database('productsIndustryStands').where({ id }).first();
 
     res.status(200).json(product);
   } catch (error) {
@@ -96,10 +96,10 @@ exports.updateProductByName = async (req, res) => {
     const { name } = req.params;
     const { category, description, price, quantity } = req.body;
 
-    const updated = await database('products').where({ name }).update({ category, description, price, quantity });
+    const updated = await database('productsIndustryStands').where({ name }).update({ category, description, price, quantity });
 
     if (!updated) return res.status(404).send('Product not found with given name');
-    const product = await database('products').where({ name }).first();
+    const product = await database('productsIndustryStands').where({ name }).first();
 
     res.status(200).json(product);
   } catch (error) {
@@ -112,7 +112,7 @@ exports.updateProductByName = async (req, res) => {
 exports.deleteProductById = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = await database('products').where({ id }).del();
+    const deleted = await database('productsIndustryStands').where({ id }).del();
 
     if (!deleted) return res.status(404).send('Product not found');
     res.status(200).send('Product deleted successfully');
