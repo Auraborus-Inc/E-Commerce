@@ -11,6 +11,7 @@ const categoryRoutes = require('./routes/catagoryRoutes');
 const tokenRoutes = require('./routes/tokenRoutes');
 const productsRoutes = require('./routes/productsRoutes');
 const userRoutes = require('./routes/userRoutes');
+const ordersRoutes = require('./routes/ordersRoutes');
 
 
 app.use(cors());
@@ -29,6 +30,7 @@ app.use('/api/categories', categoryRoutes);
 app.use('/api/tokens', tokenRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/users', userRoutes);
+app.use("/api/order", ordersRoutes);
 
 app.listen(port, () => {
     console.log(`Server Started at http://localhost:${port}`);
