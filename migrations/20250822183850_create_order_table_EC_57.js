@@ -3,25 +3,27 @@
  * @returns { Promise<void> }
  */
 exports.up = async function (knex) {
-  await knex.schema.createTable("orders", function (table) {
-    table.increments("id").primary();
-    table.integer("user_id").notNullable();
-    table.decimal("total_price", 10, 2).notNullable();
-    table.string("status", 20).defaultTo("pending");
-    table.timestamp("created_at").defaultTo(knex.fn.now());
-    table.timestamp("updated_at").defaultTo(knex.fn.now());
-  });
+  await knex.schema.createTable("cart", function (table) {
+    table.increments("id").primary(); // PK for each cart item
 
-  await knex.schema.createTable("order_items", function (table) {
-    table.increments("id").primary();
+    // user_id -> FK to users table (UUID)
     table
-      .integer("order_id")
-      .unsigned()
+      .uuid("user_id")
+      .notNullable()
       .references("id")
-      .inTable("orders")
+      .inTable("user") // or "users", depending on your actual table name
       .onDelete("CASCADE");
-    table.integer("product_id").notNullable();
-    table.integer("quantity").notNullable();
+
+    // product_id -> FK to productsIndustryStands (check its PK type!)
+    table
+      .integer("product_id") // change to .uuid() if productsIndustryStands.id is uuid
+      .unsigned()
+      .notNullable()
+      .references("id")
+      .inTable("productsIndustryStands")
+      .onDelete("CASCADE");
+
+    table.integer("quantity").notNullable().defaultTo(1);
     table.decimal("price", 10, 2).notNullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.timestamp("updated_at").defaultTo(knex.fn.now());
@@ -33,6 +35,5 @@ exports.up = async function (knex) {
  * @returns { Promise<void> }
  */
 exports.down = async function (knex) {
-  await knex.schema.dropTableIfExists("order_items");
-  await knex.schema.dropTableIfExists("orders");
+  await knex.schema.dropTableIfExists("cart");
 };
