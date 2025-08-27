@@ -119,7 +119,8 @@ exports.updateProductById = async (req, res) => {
       stock_quantity,
       brand,
       category_id,
-      is_active
+      is_active,
+      image
     } = req.body;
 
     if (
@@ -144,6 +145,7 @@ exports.updateProductById = async (req, res) => {
       ...(brand && { brand }),
       ...(category_id && { category_id }),
       ...(typeof is_active !== "undefined" && { is_active }),
+      ...(image && { image_url: image }),
       updated_at: new Date()
     };
 
