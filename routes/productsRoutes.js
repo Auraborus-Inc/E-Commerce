@@ -2,9 +2,8 @@ const express = require('express');
 const router = express.Router();
 
 const productsContoller = require('../controllers/productsController');
-const { route } = require('./userRoutes');
 
-// Define CURD routes for product operations
+// -------------------- Products CRUD --------------------
 router.post('/addProduct', productsContoller.addProduct);
 router.get('/getAllProducts', productsContoller.getAllProducts);
 

@@ -12,11 +12,14 @@ const tokenRoutes = require('./routes/tokenRoutes');
 const productsRoutes = require('./routes/productsRoutes');
 const userRoutes = require('./routes/userRoutes');
 const cartRoutes = require('./routes/cartRoutes');
+const productMediaRoutes = require("./routes/productMediaRoutes");
+
 
 
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static("uploads"));
 
 app.use(session({
     secret: 'your_secret_key',
@@ -31,6 +34,7 @@ app.use('/api/tokens', tokenRoutes);
 app.use('/api/products', productsRoutes);
 app.use('/api/users', userRoutes);
 app.use("/api/cart", cartRoutes);
+app.use("/api/productMedia", productMediaRoutes);
 
 app.listen(port, () => {
     console.log(`Server Started at http://localhost:${port}`);

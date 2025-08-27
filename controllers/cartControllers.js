@@ -88,3 +88,51 @@ exports.removeCartItem = async(req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 }
+
+exports.checkout = async (req, res) => {
+  const trx = await database.transaction();
+  try {
+    const { user_id } = req.body;
+
+    if (!user_id) {
+      await trx.rollback();
+      return res.status(400).json({ message: 'user_id is required' });
+    }
+
+    // 1. Get user cart
+    const cartItems = await trx('cart')
+      .where({ user_id });
+
+    if (!cartItems.length) {
+      await trx.rollback();
+      return res.status(400).json({ message: 'Cart is empty' });
+    }
+
+    // 2. Update product stock
+    for (const item of cartItems) {
+      const product = await trx('productsIndustryStands')
+        .where({ id: item.product_id })
+        .first();
+
+      if (!product || product.stock_quantity < item.quantity) {
+        await trx.rollback();
+        return res.status(400).json({ message: `Not enough stock for product ${item.product_id}` });
+      }
+
+      await trx('productsIndustryStands')
+        .where({ id: item.product_id })
+        .decrement('stock_quantity', item.quantity);
+    }
+
+    // 3. Clear the cart
+    await trx('cart').where({ user_id }).del();
+
+    await trx.commit();
+    return res.status(200).json({ message: 'Checkout successful. Cart cleared and stock updated.' });
+
+  } catch (error) {
+    await trx.rollback();
+    console.error('Error during checkout:', error);
+    return res.status(500).json({ message: 'Internal server error' });
+  }
+};
