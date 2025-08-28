@@ -66,7 +66,7 @@ exports.loginUser = async (req, res) => {
             .first();
 
         if (!user) {
-            return res.status(400).send('Invalid credentials');
+            return res.status(400).send('Invalid Credentials');
         }
 
         const token = generateAccessToken(user)
