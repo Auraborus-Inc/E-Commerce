@@ -24,6 +24,7 @@ exports.createCategory = async (req, res) => {
 exports.getAllCategories = async (req, res) => {
     try {
         const categories = await database('catagories').select('*');
+        console.log("Fetched categories:", categories);
         return res.status(200).json(categories);
     } catch (err) {
         console.error(err);
