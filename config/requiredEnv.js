@@ -1,0 +1,5 @@
+
+export const REQUIRED_ENV_VARS = [
+  "JWT_SECRET",
+  "JWT_REFRESH_SECRET",
+];
