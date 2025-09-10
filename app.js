@@ -1,9 +1,15 @@
+require('dotenv').config();
+
 const express = require('express');
 const session = require('express-session');
+const { validateEnv } = require("./config/validateEnv.js");
 
 const port = 8000;
 const app = express();
 const cors = require('cors');
+
+validateEnv(process.env);
+
 
 // Impoting Routes
 const authRoutes = require('./routes/authRoutes');

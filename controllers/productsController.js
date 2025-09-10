@@ -55,13 +55,17 @@ exports.addProduct = async (req, res) => {
 // GET /getAllProducts
 exports.getAllProducts = async (req, res) => {
   try {
-    const products = await database('productsIndustryStands').select('*');
+    const products = await database('productsIndustryStands')
+      .select('*')
+      .orderBy('name', 'asc'); // orders alphabetically by 'name'
+    
     res.status(200).json(products);
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
   }
 };
+
 
 // GET /getProductById/:id
 exports.getProductById = async (req, res) => {
